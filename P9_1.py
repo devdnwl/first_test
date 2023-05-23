@@ -1,5 +1,5 @@
 MAX_QSIZE = 5
-class CircularQueue:
+class CircularQueue:        # 레벨 순회를 위한 원형큐
     def __init__(self):
         self.front = 0
         self.rear = 0
@@ -67,148 +67,147 @@ def calc_height(n) :
     else:
         return hRight + 1
     
-class BSTNode:
-    def __init__ (self, key, value):
-        self.key = key
-        self.value = value
-        self.left = None
-        self.right = None
+class BSTNode:                          # 이진탐색트리를 위한 노드 클래스
+    def __init__ (self, key, value):    # 생성자: 키와 값을 받음
+        self.key = key                  # 키(key)
+        self.value = value              # 값(value)
+        self.left = None                # 왼쪽 자식에 대한 링크
+        self.right = None               # 오른쪽 자식에 대한 링크
         
-def search_value_bst(n, value):
-    if n == None: return None
-    elif value == n.value:
+def search_value_bst(n, value):                 # 이진탐색트리 탐색연산(preorder 사용) : 값을 이용한 탐색
+    if n == None: return None                
+    elif value == n.value:                      # n의 value와 동일->탐색성공
         return n
-    res = search_value_bst(n.left, value)
-    if res is not None:
-        return res
-    else:
-        return search_value_bst(n.right, value)
+    res = search_value_bst(n.left, value)       # 왼쪽서브트리에서 탐색
+    if res is not None:                         # 탐색이 성공이면
+        return res                              # 결과 반환
+    else:                                       # 왼쪽에서 탐색 실패이면
+        return search_value_bst(n.right, value) # 오른쪽을 탐색해 결과 반환
     
 #P9_1 ------------------
 def search_max_bst_recur(n):
-    if n.right == None:
-        return n
-    else:
-        n = n.right
-        return search_max_bst_recur(n)
+    if n.right == None:                 # 오른쪽 자식 값이 None이 되면
+        return n                        # n 반환
+    else:                               # None이 아니라면
+        n = n.right                     # n에 오른쪽 자식 값을 넣고
+        return search_max_bst_recur(n)  # 함수 순환
 
 def search_min_bst_recur(n):
-    if n.left == None:
-        return n
-    else:
-        n = n.left
-        return search_min_bst_recur(n)
+    if n.left == None:                  # 왼쪽 자식 값이 None이 되면
+        return n                        # n 반환
+    else:                               # None이 아니라면
+        n = n.left                      # n에 왼쪽 자식 값을 넣고
+        return search_min_bst_recur(n)  # 함수 순환
 #-----------------------
-def search_bst(n, key):
+def search_bst(n, key):                 # 이진탐색트리 탐색연산(순환 함수) 
     if n == None:
         return None
-    elif key == n.key:
+    elif key == n.key:                  # n의 키 값과 동일->탐색성공
         return n
-    elif key < n.key:
-        return search_bst(n.left, key)
-    else:
-        return search_bst(n.right, key)
+    elif key < n.key:                   # key<n의 키
+        return search_bst(n.left, key)  # 순환호출로 왼쪽 서브트리 탐색
+    else:                               # key>n의 키
+        return search_bst(n.right, key) # 순환호출로 오른쪽 서브트리 탐색
     
-def search_bst_iter(n, key):
-    while n != None:
-        if key == n.key:
+def search_bst_iter(n, key):    # 이진트리탐색 탐색연산(반복 함수)
+    while n != None:            # n의 None이 아닐 때 까지
+        if key == n.key:        # n의 키 값과 동일->탐색성공
             return n
-        elif key < n.key:
-            n = n.left
-        else:
-            n = n.right
-    return None
+        elif key < n.key:       # key<n의 키
+            n = n.left          # n을 왼쪽 서브트리의 루트로 이동
+        else:                   # key>n의 키
+            n = n.right         # n을 오른쪽 서브트리의 루트로 이동
+    return None                 # 찾는 키의 노드가 없음
 
-def insert_bst(r, n):
-    if n.key < r.key:
-        if r.left is None:
-            r.left = n
+def insert_bst(r, n):                       # 이진탐색트리 삽입연산 (노드를 삽입함): 순환구조 이용
+    if n.key < r.key:                       # 삽입할 노드의 키가 루트보다 작으면
+        if r.left is None:                  # 루트의 왼쪽 자식이 없으면
+            r.left = n                      # n의 루트의 왼쪽 자식이 됨
             return True
-        else:
-            return insert_bst(r.left, n)
-    elif n.key > r.key:
-        if r.right is None:
-            r.right = n
+        else:                               # 루트의 왼쪽 자식이 있으면
+            return insert_bst(r.left, n)    # 왼쪽 자식에게 삽입하도록 함
+    elif n.key > r.key:                     # 삽입할 노드의 키가 루트보다 크면
+        if r.right is None:                 # 루트의 오른쪽 자식이 없으면
+            r.right = n                     # n의 루트의 오른쪽 자식이 됨
             return True
-        else:
-            return insert_bst(r.right, n)
-    else:
-        return False
+        else:                               # 루트의 오른쪽 자식이 있으면
+            return insert_bst(r.right, n)   # 오른쪽 자식에게 삽입하도록 함
+    else:                                   # 키가 중독되면
+        return False                        # 삽입하지 않음
     
-def delete_bst_case1 (parent, node, root):
-    if parent is None:
-        root = None
+def delete_bst_case1 (parent, node, root): 
+    if parent is None:              # 삭제할 단말 노드가 루트이면
+        root = None                 # 공백 트리가 됨
     else:
-        if parent.left == node:
-            parent.left = None
-        else:
-            parent.right = None
-    return root
+        if parent.left == node:     # 삭제할 노드가 부모의 왼쪽 자식이면
+            parent.left = None      # 부모의 왼쪽 링크를 None
+        else:                       # 오른쪽 자식이면
+            parent.right = None     # 부모의 오른쪽 링크를 None
+    return root                     # root가 변경될 수도 있으므로 변환
 
 def delete_bst_case2 (parent, node, root):
-    if node.left is not None:
-        child = node.left
+    if node.left is not None:       # 삭제할 노드가 왼쪽 자식만 가짐
+        child = node.left           # child는 왼쪽 자식
+    else:                           # 삭제할 노드가 오른쪽 자식만 가짐
+        child = node.right          # child는 오른쪽 자식
+    if node == root:                # 없애려는 노드가 루트이면
+        root = child                # 이제 child가 새로운 루트가 됨
     else:
-        child = node.right
-    if node == root:
-        root = child
-    else:
-        if node is parent.left:
-            parent.left = child
-        else:
-            parent.right = child
-    return root
+        if node is parent.left:     # 삭제할 노드가 부모의 왼쪽 자식
+            parent.left = child     # 부모의 왼쪽 링크를 변경
+        else:                       # 삭제할 노드가 부모의 오른쪽 자식
+            parent.right = child    # 부모의 오른쪽 링크를 변경
+    return root                     # root가 변경될 수도 있으므로 변환
 
 def delete_bst_case3 (parent, node, root):
-    succp = node
-    succ = node.right
-    while (succ.left != None):
+    succp = node                    # 후계자의 부모 노드
+    succ = node.right               # 후계자 노드
+    while (succ.left != None):      # 후계자와 부모노드 탐색
         succp = succ
         succ = succ.left
-    if (succp.left == succ):
-        succp.left = succ.right
-    else:
-        succp.right = succ.right
-    node.key = succ.key
-    node.value = succ.value
-    node = succ;
-    return root
+    if (succp.left == succ):        # 후계자가 왼쪽 자식이면
+        succp.left = succ.right     # 후계자의 오른쪽 지식 연결
+    else:                           # 후계자가 오른쪽 자식이면
+        succp.right = succ.right    # 후계자의 왼쪽 자식 연결
+    node.key = succ.key             # 후계자의 키와 값을
+    node.value = succ.value         # 삭제할 노드에 복사
+    return root                     # 일관성을 위해 root 반환
 
-def delete_bst(root, key):
-    if root == None: return None
-    parent = None
-    node = root
-    while node != None and node.key != key:
+def delete_bst(root, key):                              # 이진탐색트리 삭제연산 (노드를 삭제함)
+    if root == None: return None                        # 공백 트리
+    parent = None                                       # 삭제할 노드의 부모 탐색
+    node = root                                         # 삭제할 노드 탐색
+    while node != None and node.key != key:             # parent 탐색
         parent = node
         if key < node.key: node = node.left
         else: node = node.right;
-    if node == None: return None
-    if node.left == None and node.right == None:
+    if node == None: return None                        # 삭제할 노드가 없음
+    if node.left == None and node.right == None:        # case 1: 단말 노드
         root = delete_bst_case1 (parent, node, root)
-    elif node.left == None or node.right == None:
+    elif node.left == None or node.right == None:       # case 2: 유일한 자식
         root = delete_bst_case2 (parent, node, root)
-    else:
+    else:                                               # case 3: 두 개의 자식
         root = delete_bst_case3 (parent, node, root)
-    return root
+    return root                                         # 변경된 루트 노드를 반환
 
-class BSTMap():
-    def __init__ (self):
-        self.root = None
-    def isEmpty (self): return self.root == None
-    def clear(self): self.root = None
-    def size(self): return count_node(self.root)
+class BSTMap():             # 이진탐색트리를 이용한 맵
+    def __init__ (self):    # 생성자
+        self.root = None    # 트리의 루트 노드
+    def isEmpty (self): return self.root == None    # 맵 공백 검사
+    def clear(self): self.root = None               # 맵 초기화
+    def size(self): return count_node(self.root)    # 레코드(노드) 수 계산
     def findMax(self): return search_max_bst_recur(self.root)
     def findMin(self): return search_min_bst_recur(self.root)
     def search(self, key): return search_bst(self.root, key)
     def searchValue(self, key): return search_value_bst(self.root, key)
-    def insert(self, key, value=None):
-        n = BSTNode(key, value)
-        if self.isEmpty():
-            self.root = n
-        else:
-            insert_bst(self.root, n)
-    def delete(self, key):
-        self.root = delete_bst(self.root, key)
+    def insert(self, key, value=None):  # 삽입 연산
+        n = BSTNode(key, value)         # 키와 값으로 새로운 노드 생성
+        if self.isEmpty():              # 공백이면
+            self.root = n               # 루트노드로 삽입
+        else:                           # 공백이 아니면
+            insert_bst(self.root, n)    # insert_bst() 호출
+    def delete(self, key):                      # 삭제 연산
+        self.root = delete_bst(self.root, key)  # delete_bst() 호출
     def display(self, msg = 'BTSMap :'):
         print(msg, end='')
         inorder(self.root)
